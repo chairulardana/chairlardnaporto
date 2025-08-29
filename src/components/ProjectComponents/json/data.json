@@ -1,0 +1,93 @@
+{
+  "Projects": [
+    {
+      "show": true,
+      "title": "Kantong Pintar",
+      "desc": [
+     "I have developed a financial monitoring website named Kantong Pintar. This platform is designed to help individuals, particularly the younger generation, manage their finances efficiently. With Kantong Pintar, users can track their income, expenses, and set financial goals to ensure a stable and healthy financial future. The website provides features like budget planning, expense tracking, and financial insights to empower users in making informed financial decisions. The goal of Kantong Pintar is to assist the nation's youth in managing their finances with ease and responsibility."
+      ],
+      "year": "2025",
+      "code": "",
+      "thumbnail": "/kantongpintar/beranda.png",
+      "images": [
+        "/kantongpintar/loginkntongpintar.png",
+        "/kantongpintar/beranda.png",
+        "/kantongpintar/register.png",
+        "/kantongpintar/pemasukanpengeluaran.png",
+        "/kantongpintar/datapemasukan.png",
+        "/kantongpintar/datapengeluaran.png",
+        "/kantongpintar/opsibanding.png",
+        "/kantongpintar/targettabungan.png"      
+      ],
+      "tech": [
+        "React JS",
+        "Typescript",
+        "Shadcn UI",
+        "Tailwind CSS",
+        "Vite",
+        "MySQL",
+        "Docker",
+        "Asp.net Core",
+        "PWA Vite",
+        "Kubb",
+        "Redis"
+      ],
+      "slug": "kantongpintar",
+      "category": [1]
+    },
+    {
+      "show": true,
+      "title": "Tiket Kereta Api",
+      "desc": [
+    "I developed a modern train ticket booking website with a clean and user-friendly interface. The platform allows users to easily search train schedules, book tickets, and manage their reservations online. By applying modern web technologies, the website provides a seamless and efficient digital experience for travelers."
+      ],
+      "year": "2025",
+      "code": "",
+      "thumbnail": "/public/tiketkereta/userinterface.png",
+      "images": [
+        "/public/tiketkereta/loginuser.png",
+        "/public/tiketkereta/loginadmin.png",
+        "/public/tiketkereta/dashboardadmin.png",
+        "/public/tiketkereta/userinterface.png"    
+      ],
+      "tech": [
+        "React JS",
+        "Typescript",
+        "Material UI",
+        "Vite",
+        "MySQL",
+        "Docker",
+        "Asp.net Core",
+        "Kubb"
+      ],
+      "slug": "tiketkereta",
+      "category": [1]
+    },
+     {
+      "show": true,
+      "title": "Realtime Object Detection",
+      "desc": [
+   "I developed a real-time object detection website that utilizes artificial intelligence to recognize and track objects instantly through a web interface. This project not only demonstrates the integration of AI with modern web technologies but also enhanced my skills in AI development, particularly in applying machine learning models to practical, real-world applications."
+      ],
+      "year": "2025",
+      "code": "",
+      "thumbnail": "/public/AIObject/beranda.png",
+      "images": [
+        "/public/AIObject/beranda.png",
+        "/public/AIObject/deteksiapayangdipegang.png",
+        "/public/AIObject/deteksiorgdanhp.png",
+        "/public/AIObject/deteksiorgtidur.png"     
+      ],
+      "tech": [
+        "React JS",
+        "Typescript",
+        "Tailwind CSS",
+        "Vite",
+        "Tensorflow",
+        "COCO-SSD"
+      ],
+      "slug": "objectdetection",
+      "category": [2]
+    }
+  ]
+}
