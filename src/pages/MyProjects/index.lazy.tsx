@@ -1,13 +1,31 @@
 import { motion, AnimatePresence } from "framer-motion";
-import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createLazyFileRoute } from '@tanstack/react-router';
 import Projects from '@/components/ProjectComponents/json/data.json';
 
+// Define TypeScript interfaces
+interface Project {
+  category: number[];
+  slug: string;
+  thumbnail: string;
+  year: string | number;
+  title: string;
+  desc: string[];
+  tech: string[];
+  images: string[];
+  code?: string;
+}
+
+interface ProjectCardProps {
+  project: Project;
+  index: number;
+  activeCategory: string;
+  onCardClick: (project: Project) => void;
+}
+
 // ProjectCard Component
-function ProjectCard({ project, index, activeCategory, onCardClick }) {
+function ProjectCard({ project, index, activeCategory, onCardClick }: ProjectCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   
   return (
     <>
@@ -15,8 +33,6 @@ function ProjectCard({ project, index, activeCategory, onCardClick }) {
         <motion.div 
           className="block cursor-pointer"
           onClick={() => onCardClick(project)}
-          onHoverStart={() => setIsHovered(true)}
-          onHoverEnd={() => setIsHovered(false)}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -73,22 +89,6 @@ function ProjectCard({ project, index, activeCategory, onCardClick }) {
   );
 }
 
-ProjectCard.propTypes = {
-  project: PropTypes.shape({
-    category: PropTypes.arrayOf(PropTypes.number).isRequired,
-    slug: PropTypes.string.isRequired,
-    thumbnail: PropTypes.string.isRequired,
-    year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    title: PropTypes.string.isRequired,
-    desc: PropTypes.arrayOf(PropTypes.string).isRequired,
-    tech: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }).isRequired,
-  index: PropTypes.number.isRequired,
-  activeCategory: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
-  onCardClick: PropTypes.func.isRequired,
-};
-
 // MyProjects Page
 export const Route = createLazyFileRoute('/MyProjects/')({
   component: MyProjects,
@@ -102,7 +102,7 @@ const category = {
 
 // Variants for image animation
 const imageVariants = {
-  enter: (direction) => ({
+  enter: (direction: number) => ({
     x: direction > 0 ? 300 : -300,
     opacity: 0,
     scale: 0.9
@@ -116,7 +116,7 @@ const imageVariants = {
       ease: "easeOut"
     }
   },
-  exit: (direction) => ({
+  exit: (direction: number) => ({
     x: direction < 0 ? 300 : -300,
     opacity: 0,
     scale: 0.9,
@@ -129,12 +129,14 @@ const imageVariants = {
 
 function MyProjects() {
   const [activeCategory, setActiveCategory] = useState("1");
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [direction, setDirection] = useState(0); // 0: no direction, 1: next, -1: prev
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
   
-  const handleCardClick = (project) => {
+  const handleCardClick = (project: Project) => {
     setSelectedProject(project);
     setActiveImageIndex(0);
     setDirection(0);
@@ -167,30 +169,38 @@ function MyProjects() {
   };
 
   // Handle swipe for mobile
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-
-  const handleTouchStart = (e) => {
-    setTouchStart(e.targetTouches[0].clientX);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
   };
 
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 50) {
-      // Left swipe - next image
-      nextImage();
-    } else if (touchEnd - touchStart > 50) {
-      // Right swipe - previous image
-      prevImage();
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const diffX = touchStartX.current - touchEndX.current;
+    
+    // Minimum swipe distance to trigger navigation
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0) {
+        // Left swipe - next image
+        nextImage();
+      } else {
+        // Right swipe - previous image
+        prevImage();
+      }
     }
+    
+    // Reset values
+    touchStartX.current = 0;
+    touchEndX.current = 0;
   };
 
   // Handle keyboard navigation
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return;
       
       if (e.key === 'Escape') {
@@ -247,7 +257,7 @@ function MyProjects() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          {Projects.Projects.map((project, index) => (
+          {Projects.Projects.map((project: Project, index: number) => (
             <ProjectCard
               project={project}
               key={index}
@@ -258,7 +268,7 @@ function MyProjects() {
           ))}
         </motion.div>
         
-        {Projects.Projects.filter(project => project.category.includes(parseInt(activeCategory))).length === 0 && (
+        {Projects.Projects.filter((project: Project) => project.category.includes(parseInt(activeCategory))).length === 0 && (
           <motion.div 
             className="text-center text-gray-400 mt-10 md:mt-14"
             initial={{ opacity: 0 }}
@@ -324,7 +334,7 @@ function MyProjects() {
                           exit="exit"
                           drag="x"
                           dragConstraints={{ left: 0, right: 0 }}
-                          onDragEnd={(e, { offset, velocity }) => {
+                          onDragEnd={(_e, { offset, velocity }) => {
                             const swipe = Math.abs(offset.x) * velocity.x;
                             
                             if (swipe < -10000) {
@@ -373,7 +383,7 @@ function MyProjects() {
                     {/* Thumbnails */}
                     {selectedProject.images.length > 1 && (
                       <div className="flex overflow-x-auto space-x-3 mt-4 pb-2 px-1">
-                        {selectedProject.images.map((image, index) => (
+                        {selectedProject.images.map((image: string, index: number) => (
                           <motion.img
                             key={index}
                             src={image}
@@ -397,7 +407,7 @@ function MyProjects() {
                     <div className="lg:col-span-2">
                       <h3 className="text-xl md:text-2xl font-semibold text-white mb-4 md:mb-5 border-b border-gray-700 pb-2">Description</h3>
                       <div className="space-y-4">
-                        {selectedProject.desc.map((paragraph, index) => (
+                        {selectedProject.desc.map((paragraph: string, index: number) => (
                           <p key={index} className="text-gray-300 text-base md:text-lg leading-relaxed">
                             {paragraph}
                           </p>
@@ -431,7 +441,7 @@ function MyProjects() {
                       <div className="bg-gray-700 p-4 md:p-5 rounded-lg">
                         <h3 className="text-lg md:text-xl font-semibold text-white mb-3 border-b border-gray-600 pb-2">Technologies</h3>
                         <div className="flex flex-wrap gap-2 md:gap-3">
-                          {selectedProject.tech.map((technology, index) => (
+                          {selectedProject.tech.map((technology: string, index: number) => (
                             <motion.span
                               key={index}
                               className="px-3 py-1.5 bg-blue-600 text-white text-sm md:text-base rounded-full"
