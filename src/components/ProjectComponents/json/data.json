@@ -43,12 +43,12 @@
       ],
       "year": "2025",
       "code": "",
-      "thumbnail": "/public/tiketkereta/userinterface.png",
+      "thumbnail": "/tiketkereta/userinterface.png",
       "images": [
-        "/public/tiketkereta/loginuser.png",
-        "/public/tiketkereta/loginadmin.png",
-        "/public/tiketkereta/dashboardadmin.png",
-        "/public/tiketkereta/userinterface.png"    
+        "/tiketkereta/loginuser.png",
+        "/tiketkereta/loginadmin.png",
+        "/tiketkereta/dashboardadmin.png",
+        "/tiketkereta/userinterface.png"    
       ],
       "tech": [
         "React JS",
@@ -58,6 +58,7 @@
         "MySQL",
         "Docker",
         "Asp.net Core",
+        "Midtrans",
         "Kubb"
       ],
       "slug": "tiketkereta",
@@ -71,12 +72,12 @@
       ],
       "year": "2025",
       "code": "",
-      "thumbnail": "/public/AIObject/beranda.png",
+      "thumbnail": "/AIObject/beranda.png",
       "images": [
-        "/public/AIObject/beranda.png",
-        "/public/AIObject/deteksiapayangdipegang.png",
-        "/public/AIObject/deteksiorgdanhp.png",
-        "/public/AIObject/deteksiorgtidur.png"     
+        "/AIObject/beranda.png",
+        "/AIObject/deteksiapayangdipegang.png",
+        "/AIObject/deteksiorgdanhp.png",
+        "/AIObject/deteksiorgtidur.png"     
       ],
       "tech": [
         "React JS",
