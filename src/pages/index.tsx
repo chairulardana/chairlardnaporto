@@ -29,6 +29,7 @@ function RouteComponent() {
   useEffect(() => {
     const checkCvAvailability = async () => {
       try {
+        // Gunakan path yang benar ke file CV di folder public
         const response = await fetch('/cv.pdf', { method: 'HEAD' });
         setIsCvAvailable(response.ok);
       } catch (error) {
@@ -124,12 +125,39 @@ function RouteComponent() {
       return;
     }
 
-    const link = document.createElement('a');
-    link.href = '/cv.pdf';
-    link.download = 'CVChairulArdana.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Buat URL yang benar untuk file CV
+    const cvUrl = '/cv.pdf';
+    
+    // Gunakan metode yang lebih modern untuk mendownload file
+    fetch(cvUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        // Buat URL objek untuk blob
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        // Buat elemen anchor untuk download
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = blobUrl;
+        a.download = 'CV_Chairul_Ardana.pdf';
+        
+        // Tambahkan ke DOM, klik, dan hapus
+        document.body.appendChild(a);
+        a.click();
+        
+        // Bersihkan
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+      })
+      .catch(error => {
+        console.error('Download failed:', error);
+        alert('Failed to download CV. Please try again later or contact me directly.');
+      });
   };
 
   // Optimized scroll handling with Intersection Observer
